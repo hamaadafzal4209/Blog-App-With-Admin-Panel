@@ -1,7 +1,44 @@
-import { Button, Label, TextInput } from "flowbite-react";
-import { Link } from "react-router-dom";
+import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 function SignUp() {
+
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!username || !password || !email) {
+      return setError("Please fill out all fields!");
+    }
+    try {
+      setLoading(true);
+      setError("");
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password }),
+      });
+      const data = await res.json();
+      navigate('/')
+      setLoading(false);
+      if (!res.ok) {
+        setError(data.message || "Something went wrong!");
+      } else {
+        console.log(data);
+      }
+    } catch (error) {
+      setLoading(false);
+      setError("An error occurred during sign-up. Please try again later.");
+    }
+  };
+
   return (
     <div className="my-16">
       <div className="flex p-3 max-w-4xl mx-auto flex-col md:flex-row md:items-center gap-5">
@@ -14,12 +51,13 @@ function SignUp() {
             Blog
           </Link>
           <p className="text-sm mt-5">
-          This is a demo project. You can sign up with your email and password or with Google.
+            This is a demo project. You can sign up with your email and password
+            or with Google.
           </p>
         </div>
         {/* right */}
         <div className="flex-1">
-          <form className="flex flex-col gap-4">
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <div>
               <div className="block">
                 <Label htmlFor="username" value="Your Username" />
@@ -30,6 +68,8 @@ function SignUp() {
                 type="text"
                 placeholder=""
                 required
+                value={username}
+                onChange={(e) => setUsername(e.target.value.trim())}
               />
             </div>
             <div>
@@ -42,6 +82,8 @@ function SignUp() {
                 type="email"
                 placeholder="name@gmail.com"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value.trim())}
               />
             </div>
             <div>
@@ -54,6 +96,8 @@ function SignUp() {
                 type="password"
                 placeholder="****"
                 required
+                value={password}
+                onChange={(e) => setPassword(e.target.value.trim())}
               />
             </div>
             <div className="mt-2">
@@ -61,16 +105,28 @@ function SignUp() {
                 gradientDuoTone="purpleToPink"
                 className="w-full"
                 type="submit"
+                disabled={loading}
               >
-                Sign Up
+                {loading ? (
+                  <Spinner size="sm" className="mx-auto" />
+                ) : (
+                  <p>Sign Up</p>
+                )}
               </Button>
             </div>
           </form>
-          <div className='flex gap-2 text-sm mt-5'>
+          <div className="flex gap-2 text-sm mt-5">
             <span>Have an account?</span>
-            <Link to='/sign-in' className='text-blue-600'>
+            <Link to="/sign-in" className="text-blue-600">
               Sign In
             </Link>
+          </div>
+          <div className="mt-5">
+            {error && (
+              <Alert color="failure">
+                <span>{error}</span>
+              </Alert>
+            )}
           </div>
         </div>
       </div>
