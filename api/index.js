@@ -1,9 +1,13 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
 const app = express();
 
-mongoose.connect('mongodb+srv://root:root@cluster0.i4zb5ta.mongodb.net/mern-blog-app-with-admin-panel?retryWrites=true&w=majority&appName=Cluster0')
+dotenv.config();
+const PORT = process.env.PORT;
+
+mongoose.connect(process.env.MONGO_URL)
     .then(() => {
         console.log("Database is connected!");
     })
@@ -12,6 +16,6 @@ mongoose.connect('mongodb+srv://root:root@cluster0.i4zb5ta.mongodb.net/mern-blog
     })
 
 
-app.listen(3000, () => {
-    console.log("Server is running on port 3000");
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 })
