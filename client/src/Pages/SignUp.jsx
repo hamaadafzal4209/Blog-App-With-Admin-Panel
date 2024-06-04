@@ -29,7 +29,7 @@ function SignUp() {
       if (!res.ok) {
         setError(data.message || "Something went wrong!");
       } else {
-        navigate("/");
+        navigate("/sign-in");
         console.log(data);
       }
     } catch (error) {
