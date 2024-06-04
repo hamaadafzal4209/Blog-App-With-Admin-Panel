@@ -1,7 +1,8 @@
 import userModel from "../models/userModel.js";
 import bcrypt from 'bcryptjs';
+import { errorHandler } from "../utils/error.js";
 
-export const signup = async (req, res) => {
+export const signup = async (req, res, next) => {
     const { username, email, password } = req.body;
 
     if (
@@ -12,12 +13,17 @@ export const signup = async (req, res) => {
         email === "" ||
         password === ""
     ) {
-        return res.status(400).json("Required all fields!");
+        next(errorHandler(401, 'All fields are required!'));
     }
-
-    const checkEmail = await userModel.findOne({email});
-    if(checkEmail) {
-        return res.status(400).json("Email already in use!");
+    
+    const checkEmail = await userModel.findOne({ email });
+    if (checkEmail) {
+        next(errorHandler(401, 'Email already in use!'));
+    }
+    
+    const checkusername = await userModel.findOne({ username });
+    if (checkusername) {
+        next(errorHandler(401, 'Username already in use!'));
     }
 
     const hashPassword = bcrypt.hashSync(password, 10);
@@ -35,6 +41,6 @@ export const signup = async (req, res) => {
         res.json('user created successfully');
 
     } catch (error) {
-        console.log({ message: error.message });
+        next(error);
     }
 };
