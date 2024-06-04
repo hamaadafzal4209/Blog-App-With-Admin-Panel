@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 function SignUp() {
-
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,11 +25,11 @@ function SignUp() {
         body: JSON.stringify({ username, email, password }),
       });
       const data = await res.json();
-      navigate('/')
       setLoading(false);
       if (!res.ok) {
         setError(data.message || "Something went wrong!");
       } else {
+        navigate("/");
         console.log(data);
       }
     } catch (error) {
@@ -108,7 +107,10 @@ function SignUp() {
                 disabled={loading}
               >
                 {loading ? (
-                  <Spinner size="sm" className="mx-auto" />
+                  <div className="flex gap-2">
+                    <Spinner size="sm" />
+                    <span>Loading</span>
+                  </div>
                 ) : (
                   <p>Sign Up</p>
                 )}
