@@ -7,6 +7,7 @@ import {
   signInSuccess,
   signInFailure,
 } from "../redux/user/userSclice";
+import OAuth from "../Components/OAuth";
 
 function SignIn() {
   const [email, setEmail] = useState("");
@@ -47,7 +48,7 @@ function SignIn() {
 
   return (
     <div className="my-20">
-      <div className="flex p-3 max-w-4xl mx-auto flex-col md:flex-row md:items-center gap-5">
+      <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
         <div className="flex-1">
           <Link to="/" className="font-bold text-3xl dark:text-white">
             <span className="px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white">
@@ -107,10 +108,11 @@ function SignIn() {
                 )}
               </Button>
             </div>
+            <OAuth />
           </form>
           <div className="flex gap-2 text-sm mt-5">
             <span>Dont have an account?</span>
-            <Link to="/sign-up" className="text-blue-600">
+            <Link to="/sign-up" className="text-blue-600 hover:underline">
               Sign Up
             </Link>
           </div>
