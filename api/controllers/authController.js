@@ -87,7 +87,7 @@ export const google = async (req, res, next) => {
     const user = await userModel.findOne({ email });
     if (user) {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY);
-      const { password, ...rest } = user._doc; //remove password from the object
+      const { password, ...rest } = user._doc; // remove password from the object
       res
         .status(200)
         .cookie("access_token", token, {
@@ -98,8 +98,8 @@ export const google = async (req, res, next) => {
       const generatedPassword =
         Math.random().toString(36).slice(-8) +
         Math.random().toString(36).slice(-8);
-      const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
-      const newUser = new User({
+      const hashedPassword = bcrypt.hashSync(generatedPassword, 10);
+      const newUser = new userModel({
         username:
           name.toLowerCase().split(" ").join("") +
           Math.random().toString(9).slice(-4),
@@ -108,11 +108,8 @@ export const google = async (req, res, next) => {
         profilePicture: googlePhotoUrl,
       });
       await newUser.save();
-      const token = jwt.sign(
-        { id: newUser._id, isAdmin: newUser.isAdmin },
-        process.env.JWT_SECRET
-      );
-      const { password, ...rest } = newUser._doc; //remove password from the object
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET_KEY);
+      const { password, ...rest } = newUser._doc; // remove password from the object
       res
         .status(200)
         .cookie("access_token", token, {
@@ -121,6 +118,7 @@ export const google = async (req, res, next) => {
         .json(rest);
     }
   } catch (error) {
+    console.error("Google OAuth error: ", error);
     next(error);
   }
 };

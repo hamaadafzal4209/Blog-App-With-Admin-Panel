@@ -7,14 +7,14 @@ import { signInSuccess } from '../redux/user/userSclice';
 import { useNavigate } from 'react-router-dom';
 
 function OAuth() {
-    const auth = getAuth(app)
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const auth = getAuth(app);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const handleGoogleClick = async () => {
-        const provider = new GoogleAuthProvider()
-        provider.setCustomParameters({ prompt: 'select_account' })
+        const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
         try {
-            const resultsFromGoogle = await signInWithPopup(auth, provider)
+            const resultsFromGoogle = await signInWithPopup(auth, provider);
             const res = await fetch('/api/auth/google', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -23,17 +23,17 @@ function OAuth() {
                     email: resultsFromGoogle.user.email,
                     googlePhotoUrl: resultsFromGoogle.user.photoURL,
                 }),
-            })
-            const data = await res.json()
+            });
+            const data = await res.json();
             if (res.ok) {
-                dispatch(signInSuccess(data))
-                navigate('/')
+                dispatch(signInSuccess(data));
+                navigate('/');
             }
             console.log(resultsFromGoogle);
         } catch (error) {
             console.log(error);
         }
-    }
+    };
 
     return (
         <Button className="inline-block" type="button" gradientDuoTone="pinkToOrange" outline onClick={handleGoogleClick}>
