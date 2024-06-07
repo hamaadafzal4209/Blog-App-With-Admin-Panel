@@ -23,11 +23,14 @@ function SidebarComponent() {
               icon={HiUser}
               label="User"
               labelColor="dark"
+              as="div"
             >
               Profile
             </Sidebar.Item>
           </Link>
-          <Sidebar.Item icon={HiArrowSmRight} className='cursor-pointer'>Sign Up</Sidebar.Item>
+          <Sidebar.Item icon={HiArrowSmRight} className="cursor-pointer">
+            Sign Up
+          </Sidebar.Item>
         </Sidebar.ItemGroup>
       </Sidebar.Items>
     </Sidebar>
