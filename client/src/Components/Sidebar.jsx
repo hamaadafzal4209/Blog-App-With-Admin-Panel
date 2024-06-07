@@ -27,7 +27,7 @@ function SidebarComponent() {
               Profile
             </Sidebar.Item>
           </Link>
-          <Sidebar.Item icon={HiArrowSmRight}>Sign Up</Sidebar.Item>
+          <Sidebar.Item icon={HiArrowSmRight} className='cursor-pointer'>Sign Up</Sidebar.Item>
         </Sidebar.ItemGroup>
       </Sidebar.Items>
     </Sidebar>
