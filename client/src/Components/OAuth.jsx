@@ -29,7 +29,6 @@ function OAuth() {
                 dispatch(signInSuccess(data));
                 navigate('/');
             }
-            console.log(resultsFromGoogle);
         } catch (error) {
             console.log(error);
         }
