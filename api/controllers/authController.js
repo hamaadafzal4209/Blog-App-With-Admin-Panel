@@ -64,7 +64,10 @@ export const signin = async (req, res, next) => {
       return next(errorHandler(404, "Invalid password!"));
     }
 
-    const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET_KEY);
+    const token = jwt.sign(
+      { id: validUser._id, isAdmin: validUser.isAdmin },
+      process.env.JWT_SECRET_KEY
+    );
 
     const { password: pass, ...rest } = validUser._doc; // remove password from the object
 
@@ -86,7 +89,10 @@ export const google = async (req, res, next) => {
   try {
     const user = await userModel.findOne({ email });
     if (user) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY);
+      const token = jwt.sign(
+        { id: user._id, isAdmin: user.isAdmin },
+        process.env.JWT_SECRET_KEY
+      );
       const { password, ...rest } = user._doc; // remove password from the object
       res
         .status(200)
@@ -108,7 +114,10 @@ export const google = async (req, res, next) => {
         profilePicture: googlePhotoUrl,
       });
       await newUser.save();
-      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET_KEY);
+      const token = jwt.sign(
+        { id: newUser._id, isAdmin: newUser.isAdmin },
+        process.env.JWT_SECRET_KEY
+      );
       const { password, ...rest } = newUser._doc; // remove password from the object
       res
         .status(200)
