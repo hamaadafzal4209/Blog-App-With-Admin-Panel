@@ -70,7 +70,7 @@ export const signin = async (req, res, next) => {
 
     res
       .status(200)
-      .cookie("token", token, {
+      .cookie("access_token", token, {
         httpOnly: true,
       })
       .json(rest);
