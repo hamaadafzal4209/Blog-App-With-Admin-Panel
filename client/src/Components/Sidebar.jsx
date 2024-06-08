@@ -2,9 +2,12 @@ import { Sidebar } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { HiUser, HiArrowSmRight } from "react-icons/hi";
 import { Link, useLocation } from "react-router-dom";
+import { signoutSuccess } from "../redux/user/userSclice";
+import { useDispatch } from "react-redux";
 
 function SidebarComponent() {
   const location = useLocation();
+  const dispatch = useDispatch();
   const [tab, setTab] = useState("");
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -13,6 +16,24 @@ function SidebarComponent() {
       setTab(tabFromUrl);
     }
   }, [location.search]);
+
+  const handleSignOut = async () => {
+    try {
+      const res = await fetch('/api/user/signout', {
+        method: 'POST',
+      })
+      const data = await res.json();
+      if(!res.ok){
+        console.log(data.message);
+      }
+      else{
+        dispatch(signoutSuccess(data));
+      }
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+  
   return (
     <Sidebar className="w-full">
       <Sidebar.Items>
@@ -28,7 +49,7 @@ function SidebarComponent() {
               Profile
             </Sidebar.Item>
           </Link>
-          <Sidebar.Item icon={HiArrowSmRight} className="cursor-pointer">
+          <Sidebar.Item icon={HiArrowSmRight} className="cursor-pointer" onClick={handleSignOut}>
             Sign Up
           </Sidebar.Item>
         </Sidebar.ItemGroup>
