@@ -15,7 +15,7 @@ function Dashboard() {
     }
   }, [location.search]);
   return (
-    <div className="flex  flex-col md:flex-row min-h-screen">
+    <div className="flex  flex-col md:flex-row md:min-h-screen">
       <div className='w-full md:w-56'>
         {/* sidebar */}
         <SidebarComponent />
