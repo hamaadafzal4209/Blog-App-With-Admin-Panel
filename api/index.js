@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import postRoutes from "./routes/postRoutes.js";
 import cookieParser from "cookie-parser";
 
 const app = express();
@@ -26,6 +27,7 @@ mongoose
 // import routes
 app.use("/api/user/", userRoutes);
 app.use("/api/auth/", authRoutes);
+app.use("/api/post/", postRoutes);
 
 // middleware for error handling
 app.use((err, req, res, next) => {

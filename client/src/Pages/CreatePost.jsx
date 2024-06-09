@@ -36,7 +36,7 @@ function CreatePost() {
           id="content"
           name="content"
         />
-        <Button gradientDuoTone='purpleToPink' type="submit" className="mb-6">Publish</Button>
+        <Button gradientDuoTone='purpleToPink' type="submit" className="mb-12 mt-6 sm:mt-0">Publish</Button>
       </form>
     </div>
   );
