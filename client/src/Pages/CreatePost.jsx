@@ -11,18 +11,22 @@ import {
 import { app } from "../firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
 function CreatePost() {
   const [file, setFile] = useState(null);
   const [imageUploadProgress, setImageUploadProgress] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(null);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    title: "",
+    content: "",
+    category: "uncategorized",
+  });
   const [publishError, setPublishError] = useState(null);
 
   const navigate = useNavigate();
 
-  const handleUpdloadImage = async () => {
+  const handleUploadImage = async () => {
     try {
       if (!file) {
         setImageUploadError("Please select an image");
@@ -59,30 +63,28 @@ function CreatePost() {
     }
   };
 
-  console.log(formData);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setPublishError(null);
-      const res = await fetch('/api/post/create', {
-        method: 'POST',
+      const res = await fetch("/api/post/create", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData)
-      })
+        body: JSON.stringify(formData),
+      });
       const data = await res.json();
-      if(!res.ok){
+      if (!res.ok) {
         setPublishError(data.message);
-      }
-      if(res.ok){
+      } else {
         setPublishError(null);
-        navigate(`/post/${data.slug}`)
+        navigate(`/post/${data.slug}`);
       }
       console.log(data);
     } catch (error) {
-      setPublishError(error);
+      setPublishError("Failed to publish post");
+      console.log(error);
     }
   };
 
@@ -97,11 +99,13 @@ function CreatePost() {
             required
             id="title"
             name="title"
+            value={formData.title}
             onChange={(e) =>
               setFormData({ ...formData, title: e.target.value })
             }
           />
           <Select
+            value={formData.category}
             onChange={(e) =>
               setFormData({ ...formData, category: e.target.value })
             }
@@ -109,7 +113,7 @@ function CreatePost() {
             <option value="uncategorized">Select a category</option>
             <option value="javascript">JavaScript</option>
             <option value="reactjs">React.js</option>
-            <option value="nextjs">Next.js</option>{" "}
+            <option value="nextjs">Next.js</option>
           </Select>
         </div>
         <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
@@ -124,7 +128,7 @@ function CreatePost() {
             gradientDuoTone="purpleToBlue"
             size="sm"
             type="button"
-            onClick={handleUpdloadImage}
+            onClick={handleUploadImage}
           >
             {imageUploadProgress ? (
               <div className="w-16 h-16">
@@ -151,8 +155,7 @@ function CreatePost() {
           placeholder="Write something..."
           className="h-60 mb-12"
           required
-          id="content"
-          name="content"
+          value={formData.content}
           onChange={(value) => {
             setFormData({ ...formData, content: value });
           }}
@@ -165,7 +168,7 @@ function CreatePost() {
           Publish
         </Button>
         <div className="mb-12">
-        {publishError && <Alert color="failure">{publishError}</Alert>}
+          {publishError && <Alert color="failure">{publishError}</Alert>}
         </div>
       </form>
     </div>

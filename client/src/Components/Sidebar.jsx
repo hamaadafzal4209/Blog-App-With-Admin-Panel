@@ -51,18 +51,17 @@ function SidebarComponent() {
               Profile
             </Sidebar.Item>
           </Link>
-          <Link to="/dashboard?tab=posts">
-            {currentUser.isAdmin && (
+          {currentUser.isAdmin && (
+            <Link to='/dashboard?tab=posts'>
               <Sidebar.Item
-                active={tab === "posts"}
+                active={tab === 'posts'}
                 icon={HiDocumentText}
-                labelColor="dark"
-                as="div"
+                as='div'
               >
                 Posts
               </Sidebar.Item>
-            )}
-          </Link>
+            </Link>
+          )}
           <Sidebar.Item
             icon={HiArrowSmRight}
             className="cursor-pointer"
