@@ -11,12 +11,16 @@ import {
 import { app } from "../firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import {useNavigate} from 'react-router-dom'
 
 function CreatePost() {
   const [file, setFile] = useState(null);
   const [imageUploadProgress, setImageUploadProgress] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(null);
   const [formData, setFormData] = useState({});
+  const [publishError, setPublishError] = useState(null);
+
+  const navigate = useNavigate();
 
   const handleUpdloadImage = async () => {
     try {
@@ -55,10 +59,37 @@ function CreatePost() {
     }
   };
 
+  console.log(formData);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setPublishError(null);
+      const res = await fetch('/api/post/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      })
+      const data = await res.json();
+      if(!res.ok){
+        setPublishError(data.message);
+      }
+      if(res.ok){
+        setPublishError(null);
+        navigate(`/post/${data.slug}`)
+      }
+      console.log(data);
+    } catch (error) {
+      setPublishError(error);
+    }
+  };
+
   return (
     <div className="max-w-3xl mx-auto p-3 min-h-screen">
       <h1 className="text-center text-3xl font-semibold my-6">Create a post</h1>
-      <form className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col sm:flex-row gap-4">
           <TextInput
             className="flex-1"
@@ -66,8 +97,15 @@ function CreatePost() {
             required
             id="title"
             name="title"
+            onChange={(e) =>
+              setFormData({ ...formData, title: e.target.value })
+            }
           />
-          <Select>
+          <Select
+            onChange={(e) =>
+              setFormData({ ...formData, category: e.target.value })
+            }
+          >
             <option value="uncategorized">Select a category</option>
             <option value="javascript">JavaScript</option>
             <option value="reactjs">React.js</option>
@@ -75,7 +113,13 @@ function CreatePost() {
           </Select>
         </div>
         <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
-          <FileInput type="file" name="" accept="image/*" id=""  onChange={(e) => setFile(e.target.files[0])} />
+          <FileInput
+            type="file"
+            name=""
+            accept="image/*"
+            id=""
+            onChange={(e) => setFile(e.target.files[0])}
+          />
           <Button
             gradientDuoTone="purpleToBlue"
             size="sm"
@@ -83,23 +127,23 @@ function CreatePost() {
             onClick={handleUpdloadImage}
           >
             {imageUploadProgress ? (
-              <div className='w-16 h-16'>
+              <div className="w-16 h-16">
                 <CircularProgressbar
                   value={imageUploadProgress}
                   text={`${imageUploadProgress || 0}%`}
                 />
               </div>
             ) : (
-              'Upload Image'
+              "Upload Image"
             )}
           </Button>
         </div>
-        {imageUploadError && <Alert color='failure'>{imageUploadError}</Alert>}
+        {imageUploadError && <Alert color="failure">{imageUploadError}</Alert>}
         {formData.image && (
           <img
             src={formData.image}
-            alt='upload'
-            className='w-full h-72 object-cover'
+            alt="upload"
+            className="w-full h-72 object-cover"
           />
         )}
         <ReactQuill
@@ -109,14 +153,20 @@ function CreatePost() {
           required
           id="content"
           name="content"
+          onChange={(value) => {
+            setFormData({ ...formData, content: value });
+          }}
         />
         <Button
           gradientDuoTone="purpleToPink"
           type="submit"
-          className="mb-12 mt-6 sm:mt-0"
+          className="mb-6 mt-6 sm:mt-0"
         >
           Publish
         </Button>
+        <div className="mb-12">
+        {publishError && <Alert color="failure">{publishError}</Alert>}
+        </div>
       </form>
     </div>
   );
