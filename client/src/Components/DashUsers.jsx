@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Table, Button, Modal } from "flowbite-react";
-import { Link } from "react-router-dom";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-import {FaCheck,FaTimes} from 'react-icons/fa';
+import { FaCheck, FaTimes } from "react-icons/fa";
 
 function DashPosts() {
   const { currentUser } = useSelector((state) => state.user);
@@ -51,7 +50,21 @@ function DashPosts() {
   };
 
   const handleDeletePost = async () => {
-  
+    setShowModal(false);
+    try {
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+      const data = res.json();
+      if (res.ok) {
+        setUsers((prev) => prev.filter((user) => user._id !== idForDelete));
+        setShowModal(false);
+      } else {
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (
@@ -60,7 +73,7 @@ function DashPosts() {
         <>
           <Table hoverable className="shadow-md">
             <Table.Head>
-            <Table.HeadCell>Date created</Table.HeadCell>
+              <Table.HeadCell>Date created</Table.HeadCell>
               <Table.HeadCell>User image</Table.HeadCell>
               <Table.HeadCell>Username</Table.HeadCell>
               <Table.HeadCell>Email</Table.HeadCell>
@@ -74,7 +87,7 @@ function DashPosts() {
                     {new Date(user.createdAt).toLocaleDateString()}
                   </Table.Cell>
                   <Table.Cell>
-                   <img
+                    <img
                       className="w-10 h-10 object-cover rounded-full mx-auto"
                       src={user.profilePicture}
                       alt=""
@@ -85,7 +98,7 @@ function DashPosts() {
                   </Table.Cell>
                   <Table.Cell>{user.email}</Table.Cell>
                   <Table.Cell>
-                  {user.isAdmin ? (
+                    {user.isAdmin ? (
                       <FaCheck className="text-green-500 mx-auto" />
                     ) : (
                       <FaTimes className="text-red-500 mx-auto" />
