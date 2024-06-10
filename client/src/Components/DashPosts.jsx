@@ -85,36 +85,48 @@ function DashPosts() {
               </Table.HeadCell>
             </Table.Head>
             {userPosts.map((post) => (
-              <Table.Body key={post._id} className="divide-y">
+              <Table.Body className="divide-y" key={post._id}>
                 <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                   <Table.Cell>
                     {new Date(post.updatedAt).toLocaleDateString()}
                   </Table.Cell>
                   <Table.Cell>
-                   <Link to={`/post/${post.slug}`}>
-                   <img
-                      className="w-20 h-10 object-cover"
-                      src={post.image}
-                      alt=""
-                    />
-                   </Link>
+                    <Link to={`/post/${post.slug}`}>
+                      <img
+                        src={post.image}
+                        alt={post.title}
+                        className="w-20 h-10 object-cover bg-gray-500"
+                      />
+                    </Link>
                   </Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {post.title}
+                  <Table.Cell>
+                    <Link
+                      className="font-medium text-gray-900 dark:text-white"
+                      to={`/post/${post.slug}`}
+                    >
+                      {post.title}
+                    </Link>
                   </Table.Cell>
+
                   <Table.Cell>{post.category}</Table.Cell>
-                  <Table.Cell className="text-red-500 hover:underline cursor-pointer">
+                  <Table.Cell>
                     <span
                       onClick={() => {
                         setShowModal(true);
                         setIdForDelete(post._id);
                       }}
+                      className="font-medium text-red-500 hover:underline cursor-pointer"
                     >
                       Delete
                     </span>
                   </Table.Cell>
-                  <Table.Cell className="text-green-500 hover:underline">
-                    <Link to={`/update-post/${post._id}`}>Edit </Link>
+                  <Table.Cell>
+                    <Link
+                      className="text-teal-500 hover:underline"
+                      to={`/update-post/${post._id}`}
+                    >
+                      <span>Edit</span>
+                    </Link>
                   </Table.Cell>
                 </Table.Row>
               </Table.Body>

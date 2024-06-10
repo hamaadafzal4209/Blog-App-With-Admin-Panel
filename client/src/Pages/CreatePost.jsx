@@ -129,6 +129,7 @@ function CreatePost() {
             size="sm"
             type="button"
             onClick={handleUploadImage}
+            outline
           >
             {imageUploadProgress ? (
               <div className="w-16 h-16">
