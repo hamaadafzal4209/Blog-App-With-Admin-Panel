@@ -74,7 +74,7 @@ function PostPage() {
       <div className="max-w-4xl mx-auto my-6">
         <CallToAction />
       </div>
-      <CommentSection />
+      <CommentSection postId={post._id} />
 
     </main>
   );
