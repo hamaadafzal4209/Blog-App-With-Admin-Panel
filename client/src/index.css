@@ -7,20 +7,27 @@
 }
 
 .post-content p {
-  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  margin-bottom: 10px;
 }
 
 .post-content h1 {
   font-size: 1.5rem;
   font-weight: 600;
   font-family: sans-serif;
-  margin: 1.5rem 0;
-}
-
-.post-content h2 {
-  font-size: 1.4rem;
-  font-family: sans-serif;
-  margin: 1.5rem 0;
+  margin: 0.8rem 0;
+  }
+  
+  .post-content h2 {
+    font-size: 1.4rem;
+    font-family: sans-serif;
+    margin: 0.6rem 0;
+    }
+    
+    .post-content h3 {
+      font-size: 1.2rem;
+      font-family: sans-serif;
+      margin: 0.4rem 0;
 }
 
 .post-content a {
