@@ -75,43 +75,56 @@ export const signout = (req, res, next) => {
 };
 
 export const getUsers = async (req, res, next) => {
-    if(!req.user.isAdmin){
-        return next(401,'You are not allowed to see al users');
+    if (!req.user.isAdmin) {
+        return next(errorHandler(401, 'You are not allowed to see al users'));
     }
     try {
         const startIndex = parseInt(req.query.startIndex) || 0;
         const limit = parseInt(req.query.limit) || 9;
         const sortDirection = req.query.sort === 'asc' ? 1 : -1;
-    
+
         const users = await userModel.find()
-          .sort({ createdAt: sortDirection })
-          .skip(startIndex)
-          .limit(limit);
-    
+            .sort({ createdAt: sortDirection })
+            .skip(startIndex)
+            .limit(limit);
+
         const usersWithoutPassword = users.map((user) => {
-          const { password, ...rest } = user._doc;
-          return rest;
+            const { password, ...rest } = user._doc;
+            return rest;
         });
-    
+
         const totalUsers = await userModel.countDocuments();
 
         const now = new Date();
 
         const oneMonthAgo = new Date(
-          now.getFullYear(),
-          now.getMonth() - 1,
-          now.getDate()
+            now.getFullYear(),
+            now.getMonth() - 1,
+            now.getDate()
         );
         const lastMonthUsers = await userModel.countDocuments({
-          createdAt: { $gte: oneMonthAgo },
+            createdAt: { $gte: oneMonthAgo },
         });
-    
+
         res.status(200).json({
-          users: usersWithoutPassword,
-          totalUsers,
-          lastMonthUsers,
+            users: usersWithoutPassword,
+            totalUsers,
+            lastMonthUsers,
         });
     } catch (error) {
         next(error);
     }
-} 
+}
+
+export const getUser = async (req, res, next) => {
+    try {
+        const user = await userModel.findById(req.params.id);
+        if (!user) {
+            return next(errorHandler(401, 'User not found'));
+        }
+        const { password, ...rest } = user._doc;
+        res.status(200).json(user);
+    } catch (error) {
+        next(error)
+    }
+}
