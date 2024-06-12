@@ -15,20 +15,19 @@ function Header() {
 
   const handleSignOut = async () => {
     try {
-      const res = await fetch('/api/user/signout', {
-        method: 'POST',
-      })
+      const res = await fetch("/api/user/signout", {
+        method: "POST",
+      });
       const data = await res.json();
-      if(!res.ok){
+      if (!res.ok) {
         console.log(data.message);
-      }
-      else{
+      } else {
         dispatch(signoutSuccess(data));
       }
     } catch (error) {
-      console.log(error.message)
+      console.log(error.message);
     }
-  }
+  };
 
   return (
     <div>
@@ -50,7 +49,10 @@ function Header() {
             className="hidden lg:inline"
           />
         </form>
-        <Button className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center lg:hidden" color="gray" >
+        <Button
+          className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center lg:hidden"
+          color="gray"
+        >
           <AiOutlineSearch />
         </Button>
         <div className="flex gap-2 md:order-2">
@@ -80,6 +82,11 @@ function Header() {
                   {currentUser.email}
                 </span>
               </Dropdown.Header>
+              {currentUser.isAdmin && (
+                <Link to="/dashboard?tab=dash">
+                  <Dropdown.Item>Dashboard</Dropdown.Item>
+                </Link>
+              )}
               <Link to="/dashboard?tab=profile">
                 <Dropdown.Item>Profile</Dropdown.Item>
               </Link>
