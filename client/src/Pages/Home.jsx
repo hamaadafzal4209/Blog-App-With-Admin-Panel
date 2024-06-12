@@ -37,7 +37,7 @@ function Home() {
           </Link>
         </button>
       </div>
-      <div className="p-3 bg-yellow-100/75">
+      <div className="p-3 bg-[#fef3c7] dark:bg-[#334155]">
         <CallToAction />
       </div>
       <div className="my-6 max-w-6xl mx-auto w-full p-3">
