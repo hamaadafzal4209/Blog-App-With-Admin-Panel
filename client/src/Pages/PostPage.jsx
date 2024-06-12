@@ -34,8 +34,8 @@ function PostPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen" size="xl">
-        <Spinner />
+      <div className="flex items-center justify-center min-h-screen">
+        <Spinner size="xl" />
       </div>
     );
   }
