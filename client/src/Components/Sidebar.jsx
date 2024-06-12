@@ -5,6 +5,7 @@ import {
   HiArrowSmRight,
   HiDocumentText,
   HiOutlineUserGroup,
+  HiAnnotation,
 } from "react-icons/hi";
 import { Link, useLocation } from "react-router-dom";
 import { signoutSuccess } from "../redux/user/userSclice";
@@ -45,6 +46,17 @@ function SidebarComponent() {
     <Sidebar className="w-full">
       <Sidebar.Items>
         <Sidebar.ItemGroup className="flex flex-col">
+          {currentUser.isAdmin && (
+            <Link to="/dashboard?tab=dash">
+              <Sidebar.Item
+                active={tab === "dash"}
+                icon={HiAnnotation}
+                as="div"
+              >
+                Dashboard
+              </Sidebar.Item>
+            </Link>
+          )}
           <Link to="/dashboard?tab=profile">
             <Sidebar.Item
               active={tab === "profile"}
@@ -60,7 +72,7 @@ function SidebarComponent() {
             <Link to="/dashboard?tab=comments">
               <Sidebar.Item
                 active={tab === "comments"}
-                icon={HiOutlineUserGroup}
+                icon={HiAnnotation}
                 as="div"
               >
                 Comments
