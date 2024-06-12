@@ -1,0 +1,165 @@
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { Table, Button, Modal } from "flowbite-react";
+import { Link } from "react-router-dom";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
+
+function DashComments() {
+  const { currentUser } = useSelector((state) => state.user);
+  const [comments, setComments] = useState([]);
+  const [showMore, setShowMore] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [idForDelete, setIdForDelete] = useState("");
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const res = await fetch(
+          `/api/comment/getcomments?userId=${currentUser._id}`
+        );
+        const data = await res.json();
+        if (res.ok) {
+          setComments(data.comments);
+          if (data.comments.length < 9) {
+            setShowMore(false);
+          }
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    if (currentUser.isAdmin) {
+      fetchComments();
+    }
+  }, [currentUser._id, currentUser.isAdmin]);
+
+  const handleShowMore = async () => {
+    const startIndex = comments.length;
+    try {
+      const res = await fetch(
+        `/api/comment/getcomments?userId=${currentUser._id}&startIndex=${startIndex}`
+      );
+      const data = await res.json();
+      if (res.ok) {
+        setComments((prev) => [...prev, ...data.comments]);
+        if (data.comments.length < 9) {
+          setShowMore(false);
+        }
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleDeleteComment = async () => {
+    setShowModal(false);
+    try {
+      const res = await fetch(`/api/comment/deleteComment/${idForDelete}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${currentUser.token}`,
+        },
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        setComments((prev) =>
+          prev.filter((comment) => comment._id !== idForDelete)
+        );
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  return (
+    <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
+      {currentUser.isAdmin && comments.length > 0 ? (
+        <>
+          <Table hoverable className="shadow-md">
+            <Table.Head className="uppercase">
+              <Table.HeadCell>Date updated</Table.HeadCell>
+              <Table.HeadCell>Comment Content</Table.HeadCell>
+              <Table.HeadCell>Number of likes</Table.HeadCell>
+              <Table.HeadCell>POSTid</Table.HeadCell>
+              <Table.HeadCell>userid</Table.HeadCell>
+              <Table.HeadCell>delete</Table.HeadCell>
+            </Table.Head>
+            <Table.Body className="divide-y">
+              {comments.map((comment) => (
+                <Table.Row
+                  className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                  key={comment._id}
+                >
+                  <Table.Cell>
+                    {new Date(comment.updatedAt).toLocaleDateString()}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <p>{comment.content}</p>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <p className="text-center">{comment.likes.length}</p>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <p>{comment.postId}</p>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <p>{comment.userId}</p>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <span
+                      onClick={() => {
+                        setShowModal(true);
+                        setIdForDelete(comment._id);
+                      }}
+                      className="font-medium text-red-500 hover:underline cursor-pointer"
+                    >
+                      Delete
+                    </span>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+          {showMore && (
+            <button
+              onClick={handleShowMore}
+              className="text-teal-500 mx-auto w-full my-6 text-center"
+            >
+              Show More
+            </button>
+          )}
+        </>
+      ) : (
+        <p>You have no comments yet!</p>
+      )}
+      <Modal
+        show={showModal}
+        size="md"
+        onClose={() => setShowModal(false)}
+        popup
+      >
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+              Are you sure you want to delete this comment?
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button color="failure" onClick={handleDeleteComment}>
+                {"Yes, I'm sure"}
+              </Button>
+              <Button color="gray" onClick={() => setShowModal(false)}>
+                No, cancel
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
+    </div>
+  );
+}
+
+export default DashComments;
