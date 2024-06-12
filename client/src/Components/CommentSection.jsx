@@ -1,14 +1,21 @@
 import { Alert, Button, Textarea } from "flowbite-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import Comment from "./Comment";
 
 function CommentSection({ postId }) {
   const { currentUser } = useSelector((state) => state.user);
   const [comment, setComment] = useState("");
   const [commentError, setCommentError] = useState(null);
+  const [comments, setComments] = useState([]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!currentUser) {
+      setCommentError("You must be logged in to comment.");
+      return;
+    }
     try {
       const res = await fetch("/api/comment/create", {
         method: "POST",
@@ -21,13 +28,31 @@ function CommentSection({ postId }) {
       });
       const data = await res.json();
       if (res.ok) {
+        setComments((prev) => [...prev, data]);
         setCommentError(null);
         setComment("");
+      } else {
+        setCommentError(data.message || "Failed to add comment.");
       }
     } catch (error) {
       setCommentError(error.message);
     }
   };
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const res = await fetch(`/api/comment/getpostcomments/${postId}`);
+        const data = await res.json();
+        if (res.ok) {
+          setComments(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchComments();
+  }, [postId]);
 
   return (
     <>
@@ -74,11 +99,30 @@ function CommentSection({ postId }) {
               </Button>
             </div>
             {commentError && (
-              <Alert color='failure' className="mt-5">{commentError}</Alert>
+              <Alert color="failure" className="mt-5">
+                {commentError}
+              </Alert>
             )}
           </form>
         )}
       </div>
+      {comments.length === 0 ? (
+        <p>No comments yet</p>
+      ) : (
+        <div className="max-w-2xl mx-auto w-full p-3">
+          <div className="mb-6">
+            <div className="flex items-center gap-2">
+              <p className="text-sm">Comments</p>
+              <div className="border border-gray-400 h-7 w-7 flex items-center justify-center rounded-sm">
+                <span>{comments.length}</span>
+              </div>
+            </div>
+          </div>
+          {comments.slice().reverse().map((comment) => (
+            <Comment key={comment._id} comment={comment} />
+          ))}
+        </div>
+      )}
     </>
   );
 }
