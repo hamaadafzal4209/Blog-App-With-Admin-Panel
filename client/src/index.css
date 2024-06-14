@@ -6,6 +6,14 @@
   font-size: 1.05rem;
 }
 
+.ql-syntax {
+  background-color: #000;
+  color: #fff !important;
+  padding: 1rem;
+  border-radius: 5px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
 .post-content p {
   font-size: 1rem;
   margin-bottom: 10px;

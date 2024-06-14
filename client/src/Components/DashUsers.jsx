@@ -4,7 +4,7 @@ import { Table, Button, Modal } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { FaCheck, FaTimes } from "react-icons/fa";
 
-function DashPosts() {
+function DashUsers() {
   const { currentUser } = useSelector((state) => state.user);
   const [users, setUsers] = useState([]);
   const [showMore, setShowMore] = useState(true);
@@ -128,7 +128,7 @@ function DashPosts() {
           )}
         </>
       ) : (
-        <p>You have no posts yet!</p>
+        <p>You have no users yet!</p>
       )}
       <Modal
         show={showModal}
@@ -158,4 +158,4 @@ function DashPosts() {
   );
 }
 
-export default DashPosts;
+export default DashUsers;

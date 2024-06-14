@@ -1,7 +1,9 @@
-import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react";
 import { useState } from "react";
+import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import hljs from "highlight.js";
+import "highlight.js/styles/github.css"; // Or any other highlight.js theme you prefer
 import {
   getDownloadURL,
   getStorage,
@@ -12,6 +14,11 @@ import { app } from "../firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { useNavigate } from "react-router-dom";
+
+// Ensure highlight.js is globally available
+if (typeof window !== "undefined") {
+  window.hljs = hljs;
+}
 
 function CreatePost() {
   const [file, setFile] = useState(null);
@@ -25,6 +32,24 @@ function CreatePost() {
   const [publishError, setPublishError] = useState(null);
 
   const navigate = useNavigate();
+
+  const modules = {
+    syntax: true, // Enable syntax module
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      [{ list: "ordered" }, { list: "bullet" }, { indent: "-1" }, { indent: "+1" }],
+      ["link", "image"],
+      ["clean"],
+      ["code-block"],
+    ],
+  };
+
+  const formats = [
+    "header", "bold", "italic", "underline", "strike", "blockquote",
+    "list", "bullet", "indent",
+    "link", "image", "code-block"
+  ];
 
   const handleUploadImage = async () => {
     try {
@@ -155,6 +180,8 @@ function CreatePost() {
           theme="snow"
           placeholder="Write something..."
           className="h-60 mb-12"
+          modules={modules}
+          formats={formats}
           required
           value={formData.content}
           onChange={(value) => {
