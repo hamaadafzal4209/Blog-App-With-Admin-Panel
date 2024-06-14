@@ -22,7 +22,7 @@ function Home() {
   return (
     <div className="">
       <div className="max-w-6xl mx-auto space-y-6 mt-24 mb-20 p-3">
-        <h1 className="text-6xl font-bold">Welcome to my Blog</h1>
+        <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold">Welcome to my Blog</h1>
         <p className="text-gray-500 text-sm">
           {
             "Here you'll find a variety of articles and tutorials on topics such as web development, software engineering, and programming languages."
