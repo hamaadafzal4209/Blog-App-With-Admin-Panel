@@ -18,7 +18,7 @@ function Dashboard() {
     }
   }, [location.search]);
   return (
-    <div className="flex  flex-col md:flex-row md:min-h-screen">
+    <div className="flex flex-col md:flex-row md:min-h-screen">
       <div className='min-w-64'>
         {/* sidebar */}
         <SidebarComponent />
