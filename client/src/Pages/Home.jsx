@@ -22,7 +22,7 @@ function Home() {
   return (
     <div className="">
       <div className="max-w-6xl mx-auto space-y-6 mt-24 mb-20 p-3">
-        <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold">Welcome to my Blog</h1>
+        <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold">Welcome to Our Blog</h1>
         <p className="text-gray-500 text-sm">
           {
             "Here you'll find a variety of articles and tutorials on topics such as web development, software engineering, and programming languages."
@@ -31,7 +31,7 @@ function Home() {
         <button>
           <Link
             to="/search"
-            className="text-teal-500 text-sm hover:underline font-bold"
+            className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
           >
             View all posts
           </Link>
