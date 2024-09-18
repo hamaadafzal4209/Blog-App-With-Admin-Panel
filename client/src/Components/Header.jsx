@@ -56,7 +56,7 @@ function Header() {
           to="/"
           className="self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white"
         >
-          <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
+          <span className="px-2 py-1 bg-gradient-to-r italic from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white">
           DevBytes
           </span>
         </Link>
